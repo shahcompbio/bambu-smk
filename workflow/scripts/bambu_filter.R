@@ -23,7 +23,7 @@ print(bambu_version)
 ## do work
 load(sepath)
 ## rename the summarized experiment
-se <- se.NDR_default
+se <- se.NDR_0.1
 if (n_samples > 1) {
   fullLengthCounts <- assays(se)$fullLengthCounts
   rows_satisfying_conditions <- apply(fullLengthCounts, 1, function(row) any(row > 1))
