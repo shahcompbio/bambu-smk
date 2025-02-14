@@ -1,4 +1,87 @@
-# Main entrypoint of the workflow. 
-# Please follow the best practices: 
-# https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
-# in particular regarding the standardized folder structure mentioned there. 
+import os
+from snakemake.utils import min_version
+
+##### set minimum snakemake version #####
+min_version("7.31.1")
+
+# define variables
+out_dir = config["out_dir"]
+ref_genome = config["ref_fasta"]
+ref_gtf = config["ref_gtf"]
+samples = config["samples"]
+yieldsize = "1e6"
+bambu_out = "bambu_out"
+
+
+def _get_ont_tumor_bam(wildcards):
+    print("fetch bam for %s" % wildcards.sample)
+    path = config["bam"]
+    return path
+
+
+rule all:
+    input:
+        expand(os.path.join(out_dir,bambu_out,"{sample}/output.gtf"),sample=samples),
+        expand(os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/extended_annotations.gtf"),sample=samples),
+        expand(os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/detected_transcripts.gtf"),sample=samples),
+
+# create bambu read classes, will be useful for future analysis ...
+rule bambu_readclasses:
+    input:
+        bam=_get_ont_tumor_bam,
+    threads: 1
+    resources:
+        mem_mb=lambda _, attempt: 150000 + ((attempt - 1) * 150000),
+        time=720
+    params:
+        sample_name='{sample}',
+        yieldsize=yieldsize,
+        outdir=os.path.join(out_dir,bambu_out),
+        ref_genome=ref_genome,
+        ref_gtf=ref_gtf
+    output:
+        rds=os.path.join(out_dir,bambu_out,"{sample}/output.gtf")
+    singularity:
+        "docker://quay.io/preskaa/bambu:HongYhong_fix"
+    script:
+        "scripts/create_RCs.R"
+
+## transcript quantification w/ bambu
+rule quant_ont_rna:
+    input:
+        samplegtf=expand(os.path.join(out_dir,bambu_out,"{sample}/output.gtf"),
+            sample=samples),
+    threads: len(samples),
+    resources:
+        #mem_mb = lambda _, attempt: 150000 + ((attempt - 1) * 150000),
+        mem_mb=lambda _, attempt: 150000 + ((attempt - 1) * 150000),
+        time=1440
+    params:
+        outdir=os.path.join(out_dir,bambu_out),
+        ref_genome=ref_genome,
+        ref_gtf=ref_gtf
+    output:
+        gtf=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/extended_annotations.gtf"),
+        sepath=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/se.NDR_0.1.RData"),
+        default_sepath=os.path.join(out_dir,bambu_out,"transcriptome_NDR_default/se.NDR_default.RData")
+    singularity:
+        "docker://quay.io/preskaa/bambu:3.5.1"
+    script:
+        "scripts/bambu_assembly.R"
+
+## make a gtf with only detected transcripts (those with > 1 full-length reads)
+rule filter_by_counts:
+    input:
+        sepath=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/se.NDR_0.1.RData")
+    params:
+        n_samples=len(samples)
+    threads: 1,
+    resources:
+        mem_mb=20000,
+        time=120
+    output:
+        gtf=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/detected_transcripts.gtf"),
+    singularity:
+        "docker://quay.io/preskaa/bambu:3.5.1"
+    script:
+        "scripts/bambu_filter.R"

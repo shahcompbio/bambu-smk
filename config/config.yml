@@ -1,0 +1,7 @@
+# example yaml
+out_dir: /path/to/out_dir
+tmp_dir: /path/to/temp_dir
+ref_fasta: /path/to/ref_fasta
+ref_gtf: /path/to/ref_gtf
+samples: ["sample1"]
+bam: /path/to/bam
