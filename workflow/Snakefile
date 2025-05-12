@@ -9,7 +9,7 @@ out_dir = config["out_dir"]
 ref_genome = config["ref_fasta"]
 ref_gtf = config["ref_gtf"]
 samples = config["samples"]
-yieldsize = "1e6"
+yieldsize = "1e5"
 bambu_out = "bambu_out"
 
 
