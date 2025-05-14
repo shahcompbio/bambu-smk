@@ -58,6 +58,7 @@ rule quant_ont_rna:
         time=1440
     params:
         outdir=os.path.join(out_dir,bambu_out),
+        yieldsize=yieldsize,
         ref_genome=ref_genome,
         ref_gtf=ref_gtf
     output:
