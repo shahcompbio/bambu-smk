@@ -12,6 +12,7 @@ samples = config["samples"]
 yieldsize = "1e3"
 bambu_out = "bambu_out"
 
+container: "docker://quay.io/shahlab_singularity/bambu:3.8.3"
 
 def _get_ont_tumor_bam(wildcards):
     print("fetch bam for %s" % wildcards.sample)
@@ -41,8 +42,6 @@ rule bambu_readclasses:
         ref_gtf=ref_gtf
     output:
         rds=os.path.join(out_dir,bambu_out,"{sample}/output.gtf")
-    singularity:
-        "docker://quay.io/biocontainers/bioconductor-bambu:3.8.3--r44he5774e6_0"
     script:
         "scripts/create_RCs.R"
 
@@ -65,8 +64,6 @@ rule quant_ont_rna:
         gtf=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/extended_annotations.gtf"),
         sepath=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/se.NDR_0.1.RData"),
         default_sepath=os.path.join(out_dir,bambu_out,"transcriptome_NDR_default/se.NDR_default.RData")
-    singularity:
-        "docker://quay.io/biocontainers/bioconductor-bambu:3.8.3--r44he5774e6_0"
     script:
         "scripts/bambu_assembly.R"
 
@@ -82,7 +79,5 @@ rule filter_by_counts:
         time=120
     output:
         gtf=os.path.join(out_dir,bambu_out,"transcriptome_NDR_0.1/detected_transcripts.gtf"),
-    singularity:
-        "docker://quay.io/biocontainers/bioconductor-bambu:3.8.3--r44he5774e6_0"
     script:
         "scripts/bambu_filter.R"
