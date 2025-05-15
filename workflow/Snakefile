@@ -42,7 +42,7 @@ rule bambu_readclasses:
     output:
         rds=os.path.join(out_dir,bambu_out,"{sample}/output.gtf")
     singularity:
-        "docker://quay.io/preskaa/bambu:HongYhong_fix"
+        "docker://quay.io/biocontainers/bioconductor-bambu:3.8.3--r44he5774e6_0"
     script:
         "scripts/create_RCs.R"
 
