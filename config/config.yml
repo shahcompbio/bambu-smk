@@ -1,6 +1,6 @@
 # example yaml
-out_dir: /data1/shahs3/users/preskaa/SarcAtlas/data
-tmp_dir: /data1/shahs3/users/preskaa/SarcAtlas/data/tmp
+out_dir: /data1/shahs3/users/preskaa/SarcAtlas/data/APS033_bambu_test
+tmp_dir: /data1/shahs3/users/preskaa/SarcAtlas/data/APS033_bambu_test/tmp
 ref_fasta: /data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/GRCh38.primary_assembly.genome.fa
 ref_gtf: /data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/gencode.v45.primary_assembly.annotation.gtf
 samples: ["SHAH_H004037_T01_01_TR01"]
