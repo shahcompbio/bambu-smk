@@ -12,7 +12,7 @@ samples = config["samples"]
 yieldsize = "1e3"
 bambu_out = "bambu_out"
 
-container: "docker://quay.io/shahlab_singularity/bambu:3.8.3"
+container: "docker://quay.io/shahlab_singularity/bambu:3.10.0"
 
 def _get_ont_tumor_bam(wildcards):
     print("fetch bam for %s" % wildcards.sample)
@@ -32,7 +32,7 @@ rule bambu_readclasses:
         bam=_get_ont_tumor_bam,
     threads: 1
     resources:
-        mem_mb=lambda _, attempt: 150000 + ((attempt - 1) * 150000),
+        mem_mb= 450000,
         time=720
     params:
         sample_name='{sample}',
@@ -53,7 +53,7 @@ rule quant_ont_rna:
     threads: len(samples),
     resources:
         #mem_mb = lambda _, attempt: 150000 + ((attempt - 1) * 150000),
-        mem_mb=lambda _, attempt: 150000 + ((attempt - 1) * 150000),
+        mem_mb=450000,
         time=1440
     params:
         outdir=os.path.join(out_dir,bambu_out),

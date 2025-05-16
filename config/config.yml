@@ -1,7 +1,7 @@
 # example yaml
-out_dir: /path/to/out_dir
-tmp_dir: /path/to/temp_dir
-ref_fasta: /path/to/ref_fasta
-ref_gtf: /path/to/ref_gtf
-samples: ["sample1"]
-bam: /path/to/bam
+out_dir: /data1/shahs3/users/preskaa/SarcAtlas/data
+tmp_dir: /data1/shahs3/users/preskaa/SarcAtlas/data/tmp
+ref_fasta: /data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/GRCh38.primary_assembly.genome.fa
+ref_gtf: /data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/gencode.v45.primary_assembly.annotation.gtf
+samples: ["SHAH_H004037_T01_01_TR01"]
+bam: /data1/shahs3/isabl_data_lake/analyses/62/34/46234/results/minimap2/SHAH_H004037_T01_01_TR01_R1.sorted.bam
