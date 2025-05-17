@@ -42,6 +42,7 @@ rule bambu_readclasses:
         ref_gtf=ref_gtf
     output:
         rds=os.path.join(out_dir,bambu_out,"{sample}/output.gtf")
+    container: "docker://quay.io/shahlab_singularity/bambu:hongyhong_fix"
     script:
         "scripts/create_RCs.R"
 
